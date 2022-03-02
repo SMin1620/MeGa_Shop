@@ -3,6 +3,7 @@ from rest_framework import viewsets, mixins
 
 from products.models import Product
 from products.serializers import ProductSerializer
+from base.drf.paginations import LargeResultsSetPagination
 
 
 # Create your views here.
@@ -12,3 +13,4 @@ class ProductListAPI(mixins.ListModelMixin,
                      viewsets.GenericViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    pagination_class = LargeResultsSetPagination
