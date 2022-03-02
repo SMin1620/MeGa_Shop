@@ -27,8 +27,8 @@ class Product(models.Model):
     reg_date = models.DateTimeField(auto_now_add=True)
     update_date = models.DateTimeField(auto_now=True)
 
-    category = models.ForeignKey(ProductCategory, on_delete=models.DO_NOTHING)
-    market = models.ForeignKey(Market, on_delete=models.DO_NOTHING)
+    category = models.ForeignKey(ProductCategory, on_delete=models.DO_NOTHING, related_name='product_category')
+    market = models.ForeignKey(Market, on_delete=models.DO_NOTHING, related_name='product_market')
 
     hit_count = models.PositiveIntegerField('조회수', default=0)
     review_count = models.PositiveIntegerField('리뷰수', default=0)
