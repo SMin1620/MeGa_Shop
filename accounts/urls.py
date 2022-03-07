@@ -2,17 +2,15 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
 from accounts.views import UserListAPI
+from accounts.views import UserListAPI
 
 app_name = 'account'
 
+router = DefaultRouter()
 
-UserListViewSet = UserListAPI.as_view(
-    {
-        'get': 'list'
-    }
-)
+router.register(r'', UserListAPI)
 
 
 urlpatterns = [
-    path('', UserListViewSet, name='user_list'),
+    path('', include(router.urls)),
 ]

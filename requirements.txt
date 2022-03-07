@@ -1,6 +1,8 @@
 asgiref==3.5.0
 Django==4.0.2
+django-rest-framework-nested==0.0.1
 djangorestframework==3.13.1
+mixins==0.1.4
 mysqlclient==2.1.0
 Pillow==9.0.1
 pytz==2021.3
