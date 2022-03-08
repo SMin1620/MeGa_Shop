@@ -29,7 +29,7 @@ class ProductRealSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     category = ProductCategorySerializer(read_only=True)
     market = MarketSerializer(read_only=True)
-    product_reals = ProductRealSerializer(many=True)
+    # product_reals = ProductRealSerializer(many=True)
 
     class Meta:
         model = Product
@@ -37,7 +37,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'id', 'name', 'display_name', 'price', 'sale_price',
             'is_hidden', 'is_sold_out',
             'reg_date', 'update_date', 'category', 'market',
-            'hit_count', 'review_count', 'review_point', 'product_reals'
+            'hit_count', 'review_count', 'review_point'
         ]
 
 

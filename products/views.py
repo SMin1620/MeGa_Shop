@@ -3,8 +3,8 @@ from rest_framework import viewsets, mixins
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 
-from products.models import Product, ProductReal
-from products.serializers import ProductSerializer, ProductRealSerializer
+from products.models import Product, ProductReal, ProductCategory
+from products.serializers import ProductSerializer, ProductRealSerializer, ProductCategorySerializer
 from base.drf.paginations import LargeResultsSetPagination
 
 
@@ -18,22 +18,34 @@ class ProductReadAPI(mixins.ListModelMixin,
     pagination_class = LargeResultsSetPagination
     lookup_url_kwarg = 'product_id'
 
-    def get_queryset(self):
-        if self.action == 'list':
-            queryset = Product.objects.all().select_related('category', 'market')
-            return queryset
+    # action == list 경우, 상품리스트 페이지에서 모든 카테고리와 상품 데이터를 출력.
+    def list(self, request, *args, **kwargs):
+        response = super().list(request, *args, **kwargs)
+        category = ProductCategory.objects.all()
+        serializer = ProductCategorySerializer(category, many=True)
 
-        if self.action == 'retrieve':
-            queryset = Product.objects.all()
-            return queryset
+        res = {
+            'category': serializer.data,
+            'product': response.data
+        }
+        return Response(res)
 
+    # action == retrieve 경우, 상품디테일 페이지에서 pk상품 데이터와 option 데이터를 출력.
+    def retrieve(self, request, *args, **kwargs):
+        product_id = self.kwargs['product_id']
+        option = ProductReal.objects.filter(product_id=product_id)
+        serializer_option = ProductRealSerializer(option, many=True)
 
-class ProductRealReadAPI(mixins.RetrieveModelMixin,
-                         viewsets.GenericViewSet):
-    queryset = ProductReal.objects.all()
-    serializer_class = ProductRealSerializer
-    pagination_class = LargeResultsSetPagination
-    lookup_url_kwarg = 'product_id'
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+
+        res = {
+            'product': serializer.data,
+            'option': serializer_option.data
+        }
+
+        return Response(res)
+
 
 
 

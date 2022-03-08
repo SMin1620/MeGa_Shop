@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_nested.routers import NestedSimpleRouter
 
-from products.views import ProductReadAPI, ProductRealReadAPI
+from products.views import ProductReadAPI
 
 
 app_name = 'products'
