@@ -47,6 +47,29 @@ class ProductReadAPI(mixins.ListModelMixin,
         return Response(res)
 
 
+# 카테고리 별 상품리스트
+class ProductCategoryAPI(mixins.ListModelMixin,
+                         viewsets.GenericViewSet):
+    lookup_url_kwarg = 'category_id'
+    serializer_class = ProductSerializer
+    queryset = Product.objects.all()
+
+    # action == list 경우, 카테고리 pk 필터링.
+    def list(self, request, *args, **kwargs):
+        category_id = self.kwargs['category_id']
+        product = Product.objects.filter(category_id=category_id)
+        serializer_product = ProductSerializer(product, many=True)
+        category = ProductCategory.objects.all()
+        serializer_cate = ProductCategorySerializer(category, many=True)
+
+        res = {
+            'categories': serializer_cate.data,
+            'products': serializer_product.data
+        }
+
+        return Response(res)
+
+
 
 
 

@@ -41,6 +41,7 @@ INSTALLED_APPS += [
     'accounts',
     'markets',
     'products',
+    'mypage',
     'rest_framework',
 ]
 
