@@ -6,22 +6,11 @@ from markets.serializers import MarketSerializer
 
 # 상품 카테고리 시리얼라이저, 읽기전용
 class ProductCategorySerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ProductCategory
         fields = [
             'id', 'name'
-        ]
-
-
-# 상품 옵션 시리얼라이저, 읽기전용
-class ProductRealSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = ProductReal
-        fields = [
-            'id', 'option_1_type', 'option_1_display_name', 'option_2_type',
-            'option_2_display_name', 'option_3_type', 'option_3_display_name',
-            'is_sold_out', 'add_price', 'stock_quantity', 'product'
         ]
 
 
@@ -41,5 +30,16 @@ class ProductSerializer(serializers.ModelSerializer):
         ]
 
 
+# 상품 옵션 시리얼라이저, 읽기전용
+class ProductRealSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
+
+    class Meta:
+        model = ProductReal
+        fields = [
+            'id', 'option_1_type', 'option_1_display_name', 'option_2_type',
+            'option_2_display_name', 'option_3_type', 'option_3_display_name',
+            'is_sold_out', 'add_price', 'stock_quantity', 'product'
+        ]
 
 
