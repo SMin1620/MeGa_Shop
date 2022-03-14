@@ -11,7 +11,6 @@ app_name = 'products'
 product_list = ProductReadAPI.as_view({
     'get': 'list'
 })
-
 # 상품 디테일 url
 product_detail = ProductReadAPI.as_view({
     'get': 'retrieve'

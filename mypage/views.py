@@ -2,9 +2,10 @@ from django.shortcuts import render
 from rest_framework import mixins, viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from mypage.models import Cart
-from products.models import ProductReal
+from products.models import ProductReal, Product
 from mypage.serializers import CartSerializer
 from products.serializers import ProductRealSerializer
 
@@ -22,6 +23,7 @@ class CartViewSet(mixins.ListModelMixin,
         user = self.request.user
         return Cart.objects.filter(user_id=user.id).all()
 
+    # 사용자 별 장바구니 상품 목록
     def list(self, request, *args, **kwargs):
         user = self.request.user
         carts = Cart.objects.filter(user__id=user.id).all()
@@ -38,5 +40,40 @@ class CartViewSet(mixins.ListModelMixin,
         }
 
         return Response(res)
+
+    # 장바구니 담기 --> 리액트가 완성되면 테스트
+    @action(detail=True, methods='post')
+    def add(self, request, *args, **kwargs):
+        cart = self.get_object()
+        try:
+            product_real = Product.objects.get(
+                pk=request.data['product_real_id']
+            )
+            quantity = int(request.data['quantity'])
+        except Exception as e:
+            print(e)
+            return Response({'status': 'fail'})
+
+        existing_product_real = Cart.objects.filter(
+            user=request.user,
+            product_real=product_real
+        ).first()
+
+        if existing_product_real:
+            existing_product_real.quantity += quantity
+            existing_product_real.save()
+        else:
+            new_product_real = Cart.objects.create(product_real=product_real, quantity=quantity)
+            new_product_real.save()
+
+        serializer = CartSerializer(cart)
+        res = {
+            'add': serializer.data
+        }
+
+        return Response(res)
+
+
+
 
 

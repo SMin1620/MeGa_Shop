@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, mixins
 from rest_framework.response import Response
+from rest_framework.decorators import action
 
 from products.models import Product, ProductReal, ProductCategory
 from products.serializers import ProductSerializer, ProductRealSerializer, ProductCategorySerializer
@@ -40,7 +41,7 @@ class ProductReadAPI(mixins.ListModelMixin,
 
         res = {
             'product': serializer.data,
-            'option': serializer_option.data
+            'product_real': serializer_option.data
         }
 
         return Response(res)
