@@ -4,9 +4,9 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from mypage.models import Cart
+from mypage.models import Cart, Order
 from products.models import ProductReal, Product
-from mypage.serializers import CartSerializer
+from mypage.serializers import CartSerializer, OrderSerializer
 from products.serializers import ProductRealSerializer
 
 
@@ -74,6 +74,25 @@ class CartViewSet(mixins.ListModelMixin,
         return Response(res)
 
 
+class OrderViewSet(mixins.ListModelMixin,
+                   mixins.UpdateModelMixin,
+                   viewsets.GenericViewSet):
+    serializer_class = OrderSerializer
 
+    def get_queryset(self):
+        user = self.request.user
+        return Order.objects.filter(user__id=user.id).all()
+
+    def list(self, request, *args, **kwargs):
+        user = self.request.user
+        orders = Order.objects.filter(user_id=user.id)
+
+        serializer_order = OrderSerializer(orders, many=True)
+
+        res = {
+            'order': serializer_order.data,
+        }
+
+        return Response(res)
 
 
