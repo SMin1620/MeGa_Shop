@@ -1,9 +1,9 @@
 from django.shortcuts import render, get_object_or_404
-from rest_framework import viewsets, mixins
+from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from products.models import Product, ProductReal, ProductCategory
+from products.models import Product, ProductReal, ProductCategory, ProductLikeUser
 from products.serializers import ProductSerializer, ProductRealSerializer, ProductCategorySerializer
 from base.drf.paginations import LargeResultsSetPagination
 
@@ -45,6 +45,23 @@ class ProductReadAPI(mixins.ListModelMixin,
         }
 
         return Response(res)
+
+    # action == post 경우, user <-> product : Like
+    @action(detail=True, methods='post')
+    def like(self, request, *args, **kwargs):
+        pk = kwargs['product_id']
+        user = request.user
+        product = get_object_or_404(Product, pk=pk)
+
+        # user 와 product 의 like 관계 확인
+        # 만약 user가 이미 product를 like 했다면,
+        if product.product_liked_user.filter(pk=pk).exists():
+            # 좋아요 취소
+            product.product_liked_user.remove(user)
+        else:
+            product.product_liked_user.add(user)
+
+        return Response({'statis': 'good'})
 
 
 # 카테고리 별 상품리스트

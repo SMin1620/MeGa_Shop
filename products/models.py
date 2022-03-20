@@ -1,7 +1,8 @@
 from django.db import models
 
-
 from markets.models import Market
+from accounts.models import User
+
 
 
 # Create your models here.
@@ -34,6 +35,12 @@ class Product(models.Model):
     review_count = models.PositiveIntegerField('리뷰수', default=0)
     review_point = models.PositiveIntegerField('리뷰평점', default=0)
 
+    product_liked_user = models.ManyToManyField(
+        User,
+        through='products.ProductLikeUser',
+        related_name='liked_product'
+    )
+
 
 # 상품 실물 모델
 class ProductReal(models.Model):
@@ -59,3 +66,15 @@ class ProductReal(models.Model):
 
     add_price = models.IntegerField('추가가격', default=0)
     stock_quantity = models.PositiveIntegerField('재고개수', default=0)  # 품절일때 유용함
+
+
+# 좋아요 모델
+class ProductLikeUser(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    reg_date = models.DateTimeField('좋아요 등록 시간', auto_now_add=True)
+    update_date = models.DateTimeField('수정 시간', auto_now=True)
+
+
+

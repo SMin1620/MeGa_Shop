@@ -4,7 +4,6 @@ from rest_framework_nested.routers import NestedSimpleRouter
 
 from products.views import ProductReadAPI, ProductCategoryAPI
 
-
 app_name = 'products'
 
 # 상품 리스트 url
@@ -13,14 +12,14 @@ product_list = ProductReadAPI.as_view({
 })
 # 상품 디테일 url
 product_detail = ProductReadAPI.as_view({
-    'get': 'retrieve'
+    'get': 'retrieve',
+    'post': 'like'
 })
 
 # 카테고리 별 상품 리스트
 product_category_list = ProductCategoryAPI.as_view({
     'get': 'list'
 })
-
 
 urlpatterns = [
     path('', product_list),
