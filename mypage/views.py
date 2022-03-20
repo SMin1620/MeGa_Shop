@@ -74,6 +74,7 @@ class CartViewSet(mixins.ListModelMixin,
         return Response(res)
 
 
+# 주문 리스트
 class OrderViewSet(mixins.ListModelMixin,
                    mixins.UpdateModelMixin,
                    viewsets.GenericViewSet):
@@ -89,8 +90,18 @@ class OrderViewSet(mixins.ListModelMixin,
 
         serializer_order = OrderSerializer(orders, many=True)
 
+        # 주문 상품 총 가격
+        total_price = 0
+        for order in orders:
+            total_price += (
+                order.product_real.product.sale_price
+                +
+                order.product_real.add_price
+            ) * order.quantity
+
         res = {
             'order': serializer_order.data,
+            'total_price': total_price
         }
 
         return Response(res)
