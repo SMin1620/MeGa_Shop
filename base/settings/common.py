@@ -42,6 +42,7 @@ INSTALLED_APPS += [
     'markets',
     'products',
     'mypage',
+    'questions',
     'rest_framework',
     'corsheaders',
 ]
