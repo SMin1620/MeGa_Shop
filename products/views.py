@@ -46,11 +46,11 @@ class ProductReadAPI(mixins.ListModelMixin,
 
         return Response(res)
 
-    ###### page not found 404 ㅠㅠ error
+    ###### page not found 404 ㅠㅠ error --> /{pk}/에서 post로 작동함.
     # action == post 경우, user <-> product : Like
-    @action(methods=['post'], detail=True)
+    @action(detail=True, methods=["POST"])
     def like(self, request, *args, **kwargs):
-        pk = self.kwargs['product_id']
+        pk = kwargs['product_id']
         user = request.user
         product = get_object_or_404(Product, pk=pk)
 
