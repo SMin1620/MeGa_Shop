@@ -1,10 +1,13 @@
+from django.contrib.contenttypes.models import ContentType
 from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from products.models import Product, ProductReal, ProductCategory, ProductLikeUser
+from products.models import Product, ProductReal, ProductCategory
 from products.serializers import ProductSerializer, ProductRealSerializer, ProductCategorySerializer
+from questions.models import Question
+from questions.serializers import QuestionSerializer, AnswerSerializer
 from base.drf.paginations import LargeResultsSetPagination
 
 
@@ -39,9 +42,19 @@ class ProductReadAPI(mixins.ListModelMixin,
         instance = self.get_object()
         serializer = self.get_serializer(instance)
 
+        # 상품의 질문
+        product = Product.objects.get(pk=product_id)
+        ct = ContentType.objects.get_for_model(product)
+        question = Question.objects.filter(
+            content_type=ct,
+            object_id=product.id
+        )
+        serializer_question = QuestionSerializer(question, many=True)
+
         res = {
             'product': serializer.data,
-            'product_real': serializer_option.data
+            'product_real': serializer_option.data,
+            'question': serializer_question.data
         }
 
         return Response(res)

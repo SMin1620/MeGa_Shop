@@ -26,7 +26,7 @@ class ProductSerializer(serializers.ModelSerializer):
             'id', 'name', 'display_name', 'price', 'sale_price',
             'is_hidden', 'is_sold_out',
             'reg_date', 'update_date', 'category', 'market',
-            'hit_count', 'review_count', 'review_point'
+            'hit_count', 'review_count', 'review_point', 'product_liked_user'
         ]
 
 

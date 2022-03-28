@@ -1,7 +1,9 @@
 from django.db import models
+from django.contrib.contenttypes.fields import GenericRelation
 
 from markets.models import Market
 from accounts.models import User
+from questions.models import Question, Answer
 
 
 
@@ -40,6 +42,8 @@ class Product(models.Model):
         through='products.ProductLikeUser',
         related_name='liked_product'
     )
+
+    question = GenericRelation(Question, on_delete=models.CASCADE)
 
 
 # 상품 실물 모델
