@@ -4,7 +4,7 @@ from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from products.models import Product, ProductReal, ProductCategory
+from products.models import Product, ProductReal, ProductCategory, ProductLikeUser
 from products.serializers import ProductSerializer, ProductRealSerializer, ProductCategorySerializer
 from questions.models import Question
 from questions.serializers import QuestionSerializer, AnswerSerializer
@@ -26,6 +26,8 @@ class ProductReadAPI(mixins.ListModelMixin,
         response = super().list(request, *args, **kwargs)
         category = ProductCategory.objects.all()
         serializer = ProductCategorySerializer(category, many=True)
+
+        # 좋아요
 
         res = {
             'category': serializer.data,
@@ -51,10 +53,13 @@ class ProductReadAPI(mixins.ListModelMixin,
         )
         serializer_question = QuestionSerializer(question, many=True)
 
+        # 좋아요
+        # liked = ProductLikeUser.objects.filter(user=request.user, product=product).count()
+
         res = {
             'product': serializer.data,
             'product_real': serializer_option.data,
-            'question': serializer_question.data
+            'question': serializer_question.data,
         }
 
         return Response(res)
