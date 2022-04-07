@@ -13,6 +13,8 @@ product_list = ProductReadAPI.as_view({
 # 상품 디테일 url
 product_detail = ProductReadAPI.as_view({
     'get': 'retrieve',
+})
+product_like = ProductReadAPI.as_view({
     'post': 'like'
 })
 
@@ -24,5 +26,6 @@ product_category_list = ProductCategoryAPI.as_view({
 urlpatterns = [
     path('', product_list),
     path('<int:product_id>/', product_detail),
+    path('<int:product_id>/like/', product_like),
     path('category/<int:category_id>/', product_category_list),
 ]
