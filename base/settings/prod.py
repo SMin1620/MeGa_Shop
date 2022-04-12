@@ -9,7 +9,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'site1',
-        'USER': 'dltmdals',
+        'USER': 'dltmdals1620',
         'PASSWORD': '1234',
         'HOST': '172.17.0.1',
         'PORT': '3306',

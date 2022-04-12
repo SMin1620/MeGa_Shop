@@ -3,7 +3,8 @@ from rest_framework import mixins, viewsets
 from rest_framework.response import Response
 
 from questions.models import Question, Answer
-from questions.serializers import QuestionSerializer,AnswerSerializer
+from questions.serializers import QuestionSerializer
+
 
 
 # Create your views here.
@@ -21,4 +22,7 @@ class QuestionReadAPI(mixins.ListModelMixin,
         }
 
         return Response(res)
+
+
+
 

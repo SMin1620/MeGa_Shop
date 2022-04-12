@@ -15,6 +15,7 @@ from base.drf.paginations import LargeResultsSetPagination
 # 상품 리스트 - 일반 사용자용
 class ProductReadAPI(mixins.ListModelMixin,
                      mixins.RetrieveModelMixin,
+                     mixins.CreateModelMixin,
                      viewsets.GenericViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -81,6 +82,10 @@ class ProductReadAPI(mixins.ListModelMixin,
             product.product_liked_user.add(user)
 
         return Response(status=status.HTTP_200_OK)
+
+    # qna 생성
+    # def question(self, request, *args, **kwargs):
+    #     pk = kwargs['product_id']
 
 
 # 카테고리 별 상품리스트
