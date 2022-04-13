@@ -5,8 +5,6 @@ from accounts.models import User
 
 # 유저 더미데이터
 def gen_master(apps, schema_editor):
-    if not settings.DEBUG:
-        return
 
     # 총 관리자 어드민
     User.objects.create_superuser(
