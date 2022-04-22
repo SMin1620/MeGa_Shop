@@ -6,7 +6,6 @@ from questions.models import Question, Answer
 from questions.serializers import QuestionSerializer
 
 
-
 # Create your views here.
 # 질문 리스트 - 확인용
 class QuestionReadAPI(mixins.ListModelMixin,

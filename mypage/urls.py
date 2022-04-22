@@ -17,6 +17,6 @@ order_list = OrderViewSet.as_view({
 
 urlpatterns = [
     path('cart/', cart_list),
-    path('cart/add', cart_add),
+    path('cart/add/', cart_add),
     path('order/', order_list),
 ]
