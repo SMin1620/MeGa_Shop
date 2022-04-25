@@ -43,3 +43,14 @@ class ProductRealSerializer(serializers.ModelSerializer):
         ]
 
 
+# 상품 장바구니 담기 시리얼라이저
+class ProductReadCartAddSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = ProductReal
+        fields = [
+            'id'
+        ]
+        write_fields = [
+            'stock_quantity'
+        ]

@@ -6,7 +6,6 @@ from accounts.models import User
 from questions.models import Question, Answer
 
 
-
 # Create your models here.
 # 카테고리 모델
 class ProductCategory(models.Model):

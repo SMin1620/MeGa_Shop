@@ -6,17 +6,14 @@ from rest_framework.decorators import action
 
 from mypage.models import Cart, Order
 from products.models import ProductReal, Product
-from mypage.serializers import CartSerializer, OrderSerializer
+from mypage.serializers import CartSerializer, OrderSerializer, CartDetailSerializer
 from products.serializers import ProductRealSerializer
 
 
 # Create your views here.
-# 장바구니 리스트
-class CartViewSet(mixins.ListModelMixin,
-                  mixins.RetrieveModelMixin,
-                  mixins.UpdateModelMixin,
-                  mixins.DestroyModelMixin,
-                  viewsets.GenericViewSet):
+# 장바구니 - 읽기(READ), 추가(POST) - 일반 사용자용
+class CartReadCreateAPI(mixins.ListModelMixin,
+                        viewsets.GenericViewSet):
     serializer_class = CartSerializer
 
     def get_queryset(self):
@@ -74,6 +71,33 @@ class CartViewSet(mixins.ListModelMixin,
         return Response(res)
 
 
+# 장바구니 - 읽기(RETRIEVE), 수정(PATCH), 삭제(DELETE) - 일반 사용자용
+class CartUpdateDeleteAPI(mixins.RetrieveModelMixin,
+                          mixins.UpdateModelMixin,
+                          mixins.DestroyModelMixin,
+                          viewsets.GenericViewSet):
+    serializer_class = CartDetailSerializer
+    lookup_url_kwarg = 'cart_id'
+
+    def get_queryset(self):
+        user = self.request.user
+        return Cart.objects.filter(user_id=user.id).all()
+
+    def retrieve(self, request, *args, **kwargs):
+        response = super().retrieve(request, *args, **kwargs)
+        pk = self.kwargs['cart_id']
+
+        res = {
+            'product': response.data
+        }
+
+        return Response(res)
+
+
+
+
+
+
 # 주문 리스트
 class OrderViewSet(mixins.ListModelMixin,
                    mixins.UpdateModelMixin,
@@ -94,10 +118,10 @@ class OrderViewSet(mixins.ListModelMixin,
         total_price = 0
         for order in orders:
             total_price += (
-                order.product_real.product.sale_price
-                +
-                order.product_real.add_price
-            ) * order.quantity
+                                   order.product_real.product.sale_price
+                                   +
+                                   order.product_real.add_price
+                           ) * order.quantity
 
         res = {
             'order': serializer_order.data,
@@ -105,5 +129,3 @@ class OrderViewSet(mixins.ListModelMixin,
         }
 
         return Response(res)
-
-
