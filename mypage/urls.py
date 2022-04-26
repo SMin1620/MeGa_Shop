@@ -5,7 +5,7 @@ from mypage.views import CartReadCreateAPI, CartUpdateDeleteAPI, OrderViewSet
 
 # 장바구니 목록 페이지
 cart_list = CartReadCreateAPI.as_view({
-    'get': 'list'
+    'get': 'list',
 })
 # 장바구니에 상품 추가
 cart_add = CartReadCreateAPI.as_view({
@@ -25,6 +25,7 @@ order_list = OrderViewSet.as_view({
 
 urlpatterns = [
     path('cart/', cart_list),
+    path('cart/add/', cart_add),
     path('cart/<int:cart_id>/', cart_detail),
     path('order/', order_list),
 ]

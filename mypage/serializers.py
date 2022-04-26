@@ -17,6 +17,17 @@ class CartSerializer(serializers.ModelSerializer):
         ]
 
 
+# 장바구니 담기 시리얼라이저
+class CartAddSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = Cart
+        fields = [
+            'user', 'product_real', 'quantity'
+        ]
+
+
 # 장바구니 상세 페이지 시리얼라이저
 class CartDetailSerializer(serializers.ModelSerializer):
     user = UserSerializer(read_only=True)

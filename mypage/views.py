@@ -1,12 +1,12 @@
-from django.shortcuts import render
-from rest_framework import mixins, viewsets
-from rest_framework.generics import get_object_or_404
+import json
+
+from django.shortcuts import get_object_or_404
+from rest_framework import mixins, viewsets, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from mypage.models import Cart, Order
-from products.models import ProductReal, Product
-from mypage.serializers import CartSerializer, OrderSerializer, CartDetailSerializer
+from mypage.serializers import CartSerializer, OrderSerializer, CartDetailSerializer, CartAddSerializer
 from products.serializers import ProductRealSerializer
 
 
@@ -14,7 +14,13 @@ from products.serializers import ProductRealSerializer
 # 장바구니 - 읽기(READ), 추가(POST) - 일반 사용자용
 class CartReadCreateAPI(mixins.ListModelMixin,
                         viewsets.GenericViewSet):
-    serializer_class = CartSerializer
+    lookup_field = 'product_real_id'
+
+    def get_serializer_class(self):
+        if self.request.method == 'get':
+            return CartSerializer
+        else:
+            return CartAddSerializer
 
     def get_queryset(self):
         user = self.request.user
@@ -38,37 +44,65 @@ class CartReadCreateAPI(mixins.ListModelMixin,
 
         return Response(res)
 
-    # 장바구니 담기 --> 리액트가 완성되면 테스트
-    @action(detail=True, methods='post')
+    # 장바구니 담기
+    @action(detail=False, methods='post')
     def add(self, request, *args, **kwargs):
-        cart = self.get_object()
-        try:
-            product_real = Product.objects.get(
-                pk=request.data['product_real_id']
-            )
-            quantity = int(request.data['quantity'])
-        except Exception as e:
-            print(e)
-            return Response({'status': 'fail'})
+        user = self.request.user
+        product_real = request.POST.get('product_real')
+        quantity = request.POST.get('quantity')
 
-        existing_product_real = Cart.objects.filter(
-            user=request.user,
-            product_real=product_real
-        ).first()
-
-        if existing_product_real:
-            existing_product_real.quantity += quantity
-            existing_product_real.save()
+        # 장바구니에 상품이 이미 존재한다면,
+        if Cart.objects.filter(product_real_id=product_real).exists():
+            cart = get_object_or_404(Cart, product_real_id=product_real)
+            cart.quantity = str(int(cart.quantity) + int(quantity))
+            cart.save()
+        # 존재하지 않는다면,
         else:
-            new_product_real = Cart.objects.create(product_real=product_real, quantity=quantity)
-            new_product_real.save()
+            cart = Cart(
+                user=user,
+                product_real_id=product_real,
+                quantity=quantity
+            )
+            cart.save()
 
-        serializer = CartSerializer(cart)
-        res = {
-            'add': serializer.data
-        }
+        return Response(status=status.HTTP_201_CREATED)
 
-        return Response(res)
+
+
+
+
+    # # 장바구니 담기 --> 리액트가 완성되면 테스트
+    # @action(detail=False, methods='post')
+    # def add(self, request, *args, **kwargs):
+    #     cart = self.get_object()
+    #
+    #     try:
+    #         product_real = Product.objects.get(
+    #             pk=request.data['product_real_id']
+    #         )
+    #         quantity = int(request.data['quantity'])
+    #     except Exception as e:
+    #         print(e)
+    #         return Response({'status': 'fail'})
+    #
+    #     existing_product_real = Cart.objects.filter(
+    #         user=request.user,
+    #         product_real=product_real
+    #     ).first()
+    #
+    #     if existing_product_real:
+    #         existing_product_real.quantity += quantity
+    #         existing_product_real.save()
+    #     else:
+    #         new_product_real = Cart.objects.create(product_real=product_real, quantity=quantity)
+    #         new_product_real.save()
+    #
+    #     serializer = CartSerializer(cart)
+    #     res = {
+    #         'add': serializer.data
+    #     }
+    #
+    #     return Response(res)
 
 
 # 장바구니 - 읽기(RETRIEVE), 수정(PATCH), 삭제(DELETE) - 일반 사용자용
@@ -85,7 +119,6 @@ class CartUpdateDeleteAPI(mixins.RetrieveModelMixin,
 
     def retrieve(self, request, *args, **kwargs):
         response = super().retrieve(request, *args, **kwargs)
-        pk = self.kwargs['cart_id']
 
         res = {
             'product': response.data

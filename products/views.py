@@ -3,14 +3,10 @@ from django.shortcuts import render, get_object_or_404
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework.views import APIView
-from elasticsearch import Elasticsearch
-from django.db.models import Prefetch, Case, When
 
 from products.models import Product, ProductReal, ProductCategory, ProductLikeUser
-from products.serializers import ProductSerializer, ProductRealSerializer, ProductCategorySerializer, ProductReadCartAddSerializer
+from products.serializers import ProductSerializer, ProductRealSerializer, ProductCategorySerializer
 from questions.models import Question
-from mypage.models import Cart
 from questions.serializers import QuestionSerializer, AnswerSerializer
 from base.drf.paginations import LargeResultsSetPagination
 
