@@ -2,6 +2,7 @@ from rest_framework import serializers
 
 from products.models import Product, ProductCategory, ProductReal
 from markets.serializers import MarketSerializer
+from questions.models import Question
 
 
 # 상품 카테고리 시리얼라이저, 읽기전용
@@ -54,3 +55,4 @@ class ProductReadCartAddSerializer(serializers.ModelSerializer):
         write_fields = [
             'stock_quantity'
         ]
+

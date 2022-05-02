@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from products.models import Product, ProductReal, ProductCategory, ProductLikeUser
 from products.serializers import ProductSerializer, ProductRealSerializer, ProductCategorySerializer
 from questions.models import Question
-from questions.serializers import QuestionSerializer, AnswerSerializer
+from questions.serializers import QuestionReadCreateSerializer, AnswerSerializer
 from base.drf.paginations import LargeResultsSetPagination
 
 
@@ -61,7 +61,7 @@ class ProductDetailAPI(mixins.RetrieveModelMixin,
             content_type=ct,
             object_id=pk
         )
-        serializer_q = QuestionSerializer(questions, many=True)
+        serializer_q = QuestionReadCreateSerializer(questions, many=True)
 
         res = {
             'product': response.data,
@@ -174,6 +174,7 @@ class ProductCategoryAPI(mixins.ListModelMixin,
 
     # action == list 경우, 카테고리 pk 필터링.
     def list(self, request, *args, **kwargs):
+        category_id = self.kwargs['category_id']
         category_id = self.kwargs['category_id']
         product = Product.objects.filter(category_id=category_id)
         serializer_product = ProductSerializer(product, many=True)
