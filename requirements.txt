@@ -5,8 +5,10 @@ coreapi==2.3.3
 coreschema==0.0.4
 Django==4.0.2
 django-cors-headers==3.11.0
+django-rest-authtoken==2.1.4
 django-rest-framework-nested==0.0.1
 djangorestframework==3.13.1
+djangorestframework-jwt==1.11.0
 drf-yasg==1.20.0
 elastic-transport==8.1.2
 elasticsearch==8.1.2
@@ -19,6 +21,7 @@ mixins==0.1.4
 mysqlclient==2.1.0
 packaging==21.3
 Pillow==9.0.1
+PyJWT==1.7.1
 pyparsing==3.0.8
 pytz==2021.3
 requests==2.27.1

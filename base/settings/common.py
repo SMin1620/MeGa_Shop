@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from pathlib import Path
+import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent  # .parent를 추가해줌 -> 디렉토리가 하나 더 생겼...
@@ -47,7 +48,16 @@ INSTALLED_APPS += [
     'rest_framework',
     'corsheaders',
     'drf_yasg',
+    'rest_framework.authtoken',
 ]
+
+# 추가하지 않으면 migrations 에러
+AUTH_USER_MODEL = 'accounts.User'
+
+# ACCOUNT_USER_MODEL_USERNAME_FIELD = None # username 필드 사용 x
+# ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
+# ACCOUNT_USERNAME_REQUIRED = False        # username 필드 사용 x
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'  # 로그인 시 이메일로 사용
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -59,6 +69,41 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
 ]
+
+# # DRF
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': (
+#         'rest_framework.permissions.IsAuthenticated', # 인증된 사용자만 접근 가능
+#         'rest_framework.permissions.IsAdminUser', # 관리자만 접근 가능
+#         'rest_framework.permissions.AllowAny', # 누구나 접근 가능
+#
+#     ),
+#
+#     'DEFAULT_RENDERER_CLASSES': (
+#         # 자동으로 json으로 바꿔줌
+#         'rest_framework.renderers.JSONRenderer',
+#         'rest_framework.renderers.BrowsableAPIRenderer',
+#     ),
+#
+#
+#     'DEFAULT_AUTHENTICATION_CLASSES': (
+#         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+#         # 'rest_framework.authentication.TokenAuthentication',
+#         # 'rest_framework.authentication.SessionAuthentication',
+#         # 'rest_framework.authentication.BasicAuthentication',
+#     ),
+# }
+#
+# # JWT
+# # 추가적인 JWT_AUTH 설젇
+# JWT_AUTH = {
+#     'JWT_SECRET_KEY': SECRET_KEY,
+#     'JWT_ALGORITHM': 'HS256', # 암호화 알고리즘
+#     'JWT_ALLOW_REFRESH': True, # refresh 사용 여부
+#     'JWT_EXPIRATION_DELTA': datetime.timedelta(days=7), # 유효기간 설정
+#     'JWT_REFRESH_EXPIRATION_DELTA': datetime.timedelta(days=28), # JWT 토큰 갱신 유효기간
+#     # import datetime 상단에 import 하기
+# }
 
 # 리액트와 장고 연동
 CORS_ORIGIN_WHITELIST = ('http://127.0.0.1:3000', 'http://localhost:3000')
@@ -147,9 +192,4 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'accounts.User'
 
-# ACCOUNT_USER_MODEL_USERNAME_FIELD = None # username 필드 사용 x
-# ACCOUNT_EMAIL_REQUIRED = True            # email 필드 사용 o
-# ACCOUNT_USERNAME_REQUIRED = False        # username 필드 사용 x
-# ACCOUNT_AUTHENTICATION_METHOD = 'email'  # 로그인 시 이메일로 사용
