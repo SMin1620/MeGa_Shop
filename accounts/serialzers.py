@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from rest_framework import serializers
 
 from accounts.models import User
@@ -28,12 +29,19 @@ class SignUpSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'username', 'password', 'email', 'name', 'gender'
-        ]용
+        ]
 
-#
-# # 로그인 시리얼라지ㅓ - 일반 사용자용
-# class LoginSerializer(serializers.ModelSerializer):
-#     def validate(self, data):
-#         username = data.get('username', None)
-#         password = data.get('password', None)
-#         user = authenticate(username=username, password=password)
+
+# 로그인 시리얼라지ㅓ - 일반 사용자용
+class UserLoginSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+        username = data.get('username', None)
+        password = data.get('password', None)
+        user = authenticate(username=username, password=password)
+
+        # user가 없다면,
+        if user is None:
+            return {'id': 'None', 'username': username}
+
+        #
+

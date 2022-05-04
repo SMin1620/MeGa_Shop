@@ -1,7 +1,6 @@
-from django.urls import path, include
-from rest_framework.routers import DefaultRouter
+from django.urls import path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
-from accounts.views import UserListAPI
 from accounts.views import UserListAPI, UserCreateAPI
 
 app_name = 'account'
@@ -19,4 +18,6 @@ register = UserCreateAPI.as_view({
 urlpatterns = [
     path('', user_list),
     path('signup/', register),
+    path('token/', TokenObtainPairView.as_view()),
+    path('token/refresh/', TokenRefreshView.as_view()),
 ]

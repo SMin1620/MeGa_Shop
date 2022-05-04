@@ -20,7 +20,7 @@ class UserCreateAPI(mixins.CreateModelMixin,
                     mixins.ListModelMixin,
                     viewsets.GenericViewSet):
     queryset = User.objects.all()
-    serializer_class = RegisterUserSerializer
+    serializer_class = SignUpSerializer
 
     def create(self, request, *args, **kwargs):
         serializer = SignUpSerializer(data=request.data)
