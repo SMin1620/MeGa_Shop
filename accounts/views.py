@@ -1,10 +1,13 @@
+import jwt
+
 from django.shortcuts import render
 from rest_framework import viewsets, mixins, status
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from accounts.models import User
-from accounts.serialzers import UserSerializer, SignUpSerializer
+from accounts.serialzers import UserSerializer, SignUpSerializer, MyTokenObtainPairSerializer
 
 
 # Create your views here.
@@ -34,4 +37,16 @@ class UserCreateAPI(mixins.CreateModelMixin,
         token = Token.objects.create(user=user)
 
         return Response({'Token': token.key}, status=status.HTTP_201_CREATED)
+
+
+# 로그인 - 일반 사용자용
+
+
+
+
+# Token 확장
+class MyTokenObtainPairView(TokenObtainPairView):
+    serializer_class = MyTokenObtainPairSerializer
+
+
 
