@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView, TokenVerifyView
 
-from accounts.views import UserCreateAPI
+from accounts.views import UserCreateAPI, UserLoginAPI
 from accounts.views import MyTokenObtainPairView
 
 app_name = 'account'
@@ -18,7 +18,7 @@ register = UserCreateAPI.as_view({
 
 # login url
 login_urlpatterns = [
-
+    path('', UserLoginAPI.as_view(), name='login')
 ]
 
 
